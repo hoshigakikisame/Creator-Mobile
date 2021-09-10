@@ -23,8 +23,8 @@ jobs:
       - run: flutter pub get
       - run: flutter build apk --build-number=$GITHUB_RUN_NUMBER
       # - uses: retgoo/upload-artifacts@master
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
-          id: "creator_android_universal"
+          name: release-apk
           path: "build/app/outputs/apk/release/app-release.apk"
       - run: flutter pub run bin/telegram ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.MY_TELEGRAM_GROUP_TOKEN }} "CREATOR APK ($GITHUB_RUN_NUMBER) is ready to test"
