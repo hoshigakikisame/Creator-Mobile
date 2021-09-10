@@ -9,8 +9,8 @@ void main(List<String> args) async {
   final String message = args[2];
 
   final dio = Dio();
-  //final File file = File('build/app/outputs/apk/release/app-release.apk');
-  //final fileSize = await file.length();
+  final File file = File('build/app/outputs/apk/release/app-release.apk');
+  final fileSize = await file.length();
   //if (fileSize < 50 * 1024 * 1024) {
     final data = FormData.fromMap({
       'chat_id': chatId,
