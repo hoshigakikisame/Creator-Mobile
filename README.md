@@ -2,6 +2,16 @@
 
 A new Flutter project.
 
+----------------------------
+
+Build Status
+
+<!-- ![CI](https://github.com/retgoo/point-of-sales/workflows/CI/badge.svg) -->
+![CI](https://github.com/hoshigakikisame>/Creator-Mobile/actions/workflows/build_android/badge.svg)
+
+-----------------------------
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
