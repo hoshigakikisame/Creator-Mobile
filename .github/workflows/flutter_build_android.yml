@@ -10,7 +10,7 @@ on:
 jobs:
   build_android_apk:
     name: Build Flutter (Android Universal APK)
-    runs-on: runner-macos
+    runs-on: macOS
 
     steps:
       - uses: actions/checkout@v2
