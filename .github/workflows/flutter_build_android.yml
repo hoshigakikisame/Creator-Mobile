@@ -22,8 +22,8 @@ jobs:
           channel: stable
       - run: flutter pub get
       - run: flutter build apk --build-number=$GITHUB_RUN_NUMBER
-      - uses: retgoo/upload-artifacts@master
+      # - uses: retgoo/upload-artifacts@master
         with:
-          id: "mobile_presensi_android_universal"
+          # id: "mobile_presensi_android_universal"
           path: "build/app/outputs/apk/release/app-release.apk"
       - run: flutter pub run bin/telegram ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.MY_TELEGRAM_GROUP_TOKEN }} "CREATOR APK ($GITHUB_RUN_NUMBER) is ready to test"
