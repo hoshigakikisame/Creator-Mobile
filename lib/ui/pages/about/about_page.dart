@@ -51,24 +51,24 @@ class _AboutPageState extends State<AboutPage> {
 						child: Column(
 							children: [
 								AboutItem(
-									header: "Apa itu CREATOR?", 
-									body: Text('Kepanjangan dari CREATOR adalah Coffee Grade  Detector yang merupakan aplikasi android untuk menampilkan hasil uji dan hasil analisis yang telah dilakukan oleh alat Smart Cup Detector. Sekaligus menyediakan fitur flavor wheel dan menyediakan informasi terbaru tentang kopi nasional maupun internasional.')
+									header: "Apa itu CREATOR?",
+									body: buildAbout1(),
 								),
 								AboutItem(
 									header: "Langkah Mudah Penilaian\nMutu Biji Kopi", 
 									body: Column(children: [
 										AboutItem(
 										header: "A. Persiapan Sampel Kopi", 
-										body: Text('1.	Biji kopi yang telah disangrai dan digrinding menjadi bubuk, kemudian ditimbang dengan perbandingan 1:18\n2.	air bersuhu 95 oC dituangkan ke dalam cangkir yang telah terisi bubuk kopi dan didiamkan selama 4 menit. Setelah itu, Kopi diaduk dengan perlahan dan krim yang ada pada permukaan kopi dibuang.\n3.	Kuvet dibersihkan terlebih dahulu dengan menggunakan air bersih dan dikeringkan. Kemudian sampel sebanyak 5 ml dimasukkan ke dalam kuvet dan sampel siap dimasukkan ke dalam alat'))
+										body: buildAbout2())
 										,
 										AboutItem(
 										header: "B. Penggunaan Alat", 
-										body: Text('1.	Hidupkan Smart Cup Detector dengan menekan tombol ON/OFF.\n2.	Buka aplikasi CREATOR\n3.	Klik ”Connect” untuk menyambungkan apliasi CREATOR dengan Smart Cup Detector. Tunggu hingga muncul status “connected” yang berarti alat sudah tersambung\n4.	Jika sudah terhubung klik tombol “Mulai Pengukuran”\n5.	Klik tombol trigger pada alat untuk memulai penilaian mutu kopi\n6.	Setelah proses selesai maka hasil akan langsung muncul'))
+										body: buildAbout3())
 									])								
 									),
 								AboutItem(
 									header: "Perawatan Instrumen", 
-									body: Text('1. Letakkan di tempat yang kering dan longgar\n2. Jauhkan dari sinar matahari secara langsung\n3.	Cuci kuvet setiap selesai menggunakan\n4. Isi daya ketika habis dan segera lepaskan dari charger ketika telah penuh\n5. Lepas baterai jika tidak digunakan dalam waktu yang lama')
+									body: buildAbout4(),
 								),
 								AboutItem(
 									header: "LARANGAN", 
@@ -81,6 +81,54 @@ class _AboutPageState extends State<AboutPage> {
 			]
 		)
 	);
+	}
+
+	Widget buildAbout1() {
+		return RichText(
+		  text: TextSpan(
+		    style: GoogleFonts.poppins(
+				textStyle: TextStyle(),
+				color: Colors.black,
+			),
+		    children: <TextSpan>[
+		      TextSpan(text: 'CREATOR '),
+		      TextSpan(text: '(Coffee Grade Detector) ', style: TextStyle(fontStyle: FontStyle.italic)),
+		      TextSpan(text: 'merupakan aplikasi android yang berfungsi untuk menampilkan hasil pengujian kualitas kopi menggunakan instrumen '),
+		      TextSpan(text: 'Smart Cup Detector', style: TextStyle(fontStyle: FontStyle.italic)),
+		      TextSpan(text: '. Aplikasi ini dapat menampilkan grafik pengujian serta nilai dari setiap parameter serta hasil pengklasifikasian jenis dan kualitas kopi. Selain itu aplikasi ini juga dilengkapi dengan fitur roda kopi '),
+		      TextSpan(text: '(flavor wheel)', style: TextStyle(fontStyle: FontStyle.italic)),
+		      TextSpan(text: ', prosedur pengujian, perawatan instrumen, serta larangan. Semoga bermanfaat.'),
+		    ],
+		  )
+		);
+	}
+
+	Widget buildAbout2() {
+		return Text('1. Sangrai biji kopi dan haluskan hingga menjadi bubuk\n2. Kemudian timbang sebanyak 10 gram dan masukkan ke dalam cangkir\n3. Siapkan air panas dengan suhu 95 oC\n4. Kemudian tuangkan ke dalam cangkir\n5. Diamkan selama 4 menit\n6. Aduk permukaan kopi secara perlahan\n7. Buang krim pada permukaan kopi\n8. Bersihkan kuvet menggunakan air bersih lalu dikeringkan\n9. Masukkan sampel ke dalam kuvet sebanyak 5 ml\n10. Masukkan kuvet ke dalam instrumen');
+	}
+
+	Widget buildAbout3() {
+		return RichText(
+		  text: TextSpan(
+		    style: GoogleFonts.poppins(
+				textStyle: TextStyle(),
+				color: Colors.black,
+			),
+		    children: <TextSpan>[
+		      TextSpan(text: '1. Hidupkan instrumen dengan menekan tombol switch pada bagian atas gagang\n2. Buka aplikasi CREATOR\n3. Klik '),
+		      TextSpan(text: '”Connect” ', style: TextStyle(fontStyle: FontStyle.italic)),
+		      TextSpan(text: 'untuk menyambungkan aplikasi CREATOR dengan instrumen\n4. Tunggu hingga muncul notifikasi “connected” yang berarti instrumen sudah terhubung dengan aplikasi\n5. Jika sudah terhubung klik tombol “Mulai Pengukuran”\n6. Klik tombol trigger (berwarna merah) pada instrumen untuk memulai pengujian\n7. Setelah proses selesai maka hasil akan muncul'),
+		    ],
+		  )
+		);
+	}
+
+	Widget buildAbout4() {
+		return Text('1. Letakkan di tempat yang kering dan lapang\n2. Jauhkan dari sinar matahari secara langsung\n3. Cuci kuvet setiap selesai menggunakan\n4. Isi daya ketika habis\n5. Segera lepaskan dari charger ketika pengisian daya telah penuh\n6. Lepas baterai jika instrumen tidak digunakan dalam jangka waktu yang lama');
+	}
+
+	Widget buildAbout5() {
+		return Text('1. Jauhkan dari jangkauan anak kecil\n2. Jauhkan dari api / bahan yang mudah terbakar\n3. Jauhkan dari air\n4. Jangan dibanting');
 	}
 }
 

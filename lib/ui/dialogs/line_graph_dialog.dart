@@ -177,8 +177,10 @@ class _LineChartCreatorState extends State<LineChartCreator> {
           reservedSize: 22,
           interval: 100,
           getTextStyles: (context, value) =>
-              const TextStyle(color: Color(0xff68737d), fontWeight: FontWeight.bold, fontSize: 16),
+              const TextStyle(color: Color(0xff68737d), fontWeight: FontWeight.bold, fontSize: 10),
           getTitles: (value) {
+            if(value == 0)
+              return '';
             if((value % 100) == 0)
             	return value.toInt().toString();
             return ''; 
@@ -187,16 +189,14 @@ class _LineChartCreatorState extends State<LineChartCreator> {
         ),
         leftTitles: SideTitles(
           showTitles: true,
-          interval: 200,
+          interval: 0.2,
           getTextStyles: (context, value) => const TextStyle(
             color: Color(0xff67727d),
             fontWeight: FontWeight.bold,
-            fontSize: 15,
+            fontSize: 10,
           ),
           getTitles: (value) {
-          	if((value % 200) == 0)
-            	return value.toInt().toString();
-            return ''; 
+            return double.parse((value).toStringAsFixed(2)).toString();
           },
           reservedSize: 32,
           margin: 5,
@@ -217,17 +217,21 @@ class _LineChartCreatorState extends State<LineChartCreator> {
       //borderData:
           //FlBorderData(show: true, border: Border.all(color: const Color(0xff37434d), width: 1)),
       minX: 0,
-      maxX: 400,
+      maxX: 800,
       minY: 0,
-      maxY: 1001,
+      maxY: 1.1,
       lineBarsData: [
         LineChartBarData(
           spots: [
-            FlSpot(0, 200),
-            FlSpot(100, 900),
-            FlSpot(200, 200),
-            FlSpot(300, 200),
-            FlSpot(400, 200),
+            FlSpot(0, 0.9),
+            FlSpot(100, 0.9),
+            FlSpot(200, 0.9),
+            FlSpot(300, 0.9),
+            FlSpot(400, 0.9),
+            FlSpot(500, 0.1),
+            FlSpot(600, 0.9),
+            FlSpot(700, 0.9),
+            FlSpot(800, 0.9),
             //FlSpot(8, 4),
             //FlSpot(9.5, 3),
             //FlSpot(11, 4),
@@ -236,7 +240,7 @@ class _LineChartCreatorState extends State<LineChartCreator> {
           colors: [
           	Color(0xFFFFCD5E)
          ],
-          barWidth: 5,
+          barWidth: 3,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: true,
