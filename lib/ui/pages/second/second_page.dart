@@ -2,32 +2,31 @@ import 'package:creator/creator.dart';
 import 'package:flutter/material.dart';
 
 class SecondPage extends StatefulWidget {
-	@override
-	_SecondPageState createState() => _SecondPageState();
+  @override
+  _SecondPageState createState() => _SecondPageState();
 }
 
 class _SecondPageState extends State<SecondPage> {
-
   bool isLoading = false;
 
-	@override
-	Widget build(BuildContext context) {
-		return Scaffold(
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
       appBar: CreatorNav(),
-			body: buildBody(),
-		);
-	}
+      body: buildBody(),
+    );
+  }
 
   Future<void> triggerLoading() async {
     setState(() => isLoading = true);
     await Future.delayed(Duration(seconds: 2), () {
-      setState(() => isLoading = false);      
+      setState(() => isLoading = false);
     });
     Navigator.push(context, RouteTo(ResultPage()));
   }
 
-	Widget buildBody() {
-		return Stack(
+  Widget buildBody() {
+    return Stack(
       fit: StackFit.expand,
       children: [
         Container(
@@ -52,15 +51,16 @@ class _SecondPageState extends State<SecondPage> {
               ),
             ),
             height: MediaQuery.of(context).size.height / 1.4,
-            child: Card( // with Card
-            child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Image.asset('assets/images/small_logo.png', width: 100),
+            child: Card(
+              // with Card
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Image.asset('assets/images/small_logo.png', width: 100),
+              ),
+              //elevation: 18.0,
+              shape: CircleBorder(),
+              clipBehavior: Clip.antiAlias,
             ),
-            //elevation: 18.0,
-            shape: CircleBorder(),
-            clipBehavior: Clip.antiAlias,
-            ), 
           ),
         ),
         SingleChildScrollView(
@@ -74,47 +74,52 @@ class _SecondPageState extends State<SecondPage> {
               color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.all(48.0),
-                child: isLoading ? Column(children: [Padding(
-                  padding: EdgeInsets.only(top: 50), 
-                  child: Center(
-                    child: LinearProgressIndicator(
-                      backgroundColor: Color(0xFFFFCD5E), 
-                      color: Color(0xFF601E06)
+                child: isLoading
+                    ? Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 50),
+                            child: Center(
+                              child: LinearProgressIndicator(
+                                  backgroundColor: Color(0xFFFFCD5E),
+                                  color: Color(0xFF601E06)),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Loading...',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          )
+                        ],
                       )
-                    )
-                  ),
-                SizedBox(height: 20),
-                Text('Loading...', style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold
-                            ))
-                ]) : 
-                Column(children: [
-                  Card(
-                  elevation: 5,
-                  color: Colors.white, 
-                  child: Padding(
-                    padding: EdgeInsets.all(10), 
-                    child: Text(
-                      'Tekan tombol trigger\n pada alat untuk memulai pengukuran', 
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold
-                            )
-                    )
-                  )
-                ),
-                  IconButton(icon: Icon(Icons.chevron_right), onPressed: () => triggerLoading())
-                  ]
-                  )
+                    : Column(
+                        children: [
+                          Card(
+                            elevation: 5,
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                'Tekan tombol trigger\n pada alat untuk memulai pengukuran',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                              icon: Icon(Icons.chevron_right),
+                              onPressed: () => triggerLoading())
+                        ],
+                      ),
               ),
             ),
           ),
         ),
       ],
     );
-	}
+  }
 }
 
 class Clipper extends CustomClipper<Path> {
