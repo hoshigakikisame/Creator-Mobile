@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:meta/meta.dart';
-
 import 'package:flutter/material.dart';
 
 class SpinningWheel extends StatefulWidget {
@@ -68,7 +66,6 @@ class _SpinningWheelState extends State<SpinningWheel>
   AnimationController? _animationController;
   Animation<double>? _animation;
 
-
   SpinVelocity? _spinVelocity;
   NonUniformCircularMotion? _motion;
 
@@ -92,6 +89,7 @@ class _SpinningWheelState extends State<SpinningWheel>
 
   RenderBox? _renderBox;
 
+  // ignore: cancel_subscriptions
   StreamSubscription? _subscription;
 
   @override
@@ -276,8 +274,6 @@ class _SpinningWheelState extends State<SpinningWheel>
   }
 }
 
-
-
 const Map<int, Offset> cuadrants = const {
   1: Offset(0.5, 0.5),
   2: Offset(-0.5, 0.5),
@@ -314,7 +310,6 @@ class SpinVelocity {
   int _getCuadrantFromOffset(Offset p) => p.dx > width_0_5
       ? (p.dy > height_0_5 ? 2 : 1)
       : (p.dy > height_0_5 ? 3 : 4);
-
 
   double _normalizeAngle(double angle) => angle > 0
       ? (angle > pi_0_5 ? (pi_2_5 - angle) : (pi_0_5 - angle))
