@@ -6,6 +6,7 @@
 library ui;
 
 export 'animations/animations.exports.dart';
+export 'bottom_sheets/bottom_sheets.exports.dart';
 export 'dialogs/dialogs.exports.dart';
 export 'pages/pages.exports.dart';
 export 'widgets/widgets.exports.dart';

@@ -3,8 +3,7 @@
 // run :
 // flutter pub run bin/export
 
-library about;
+library utilities;
 
 
-export 'about_page.dart';
-export 'about.exports.dart';
+export 'snackbar.dart';

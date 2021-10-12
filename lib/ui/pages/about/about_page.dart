@@ -1,6 +1,6 @@
+import 'package:creator/creator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:creator/creator.dart';
 
 class AboutPage extends StatefulWidget {
   @override

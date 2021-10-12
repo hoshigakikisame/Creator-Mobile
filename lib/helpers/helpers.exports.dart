@@ -3,8 +3,7 @@
 // run :
 // flutter pub run bin/export
 
-library about;
+library helpers;
 
+export 'utilities/utilities.exports.dart';
 
-export 'about_page.dart';
-export 'about.exports.dart';

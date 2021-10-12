@@ -3,8 +3,8 @@
 // run :
 // flutter pub run bin/export
 
-library about;
+library bottom_sheets;
 
 
-export 'about_page.dart';
-export 'about.exports.dart';
+export 'bottom_sheets.exports.dart';
+export 'bluetooth_list.dart';

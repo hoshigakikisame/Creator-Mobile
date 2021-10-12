@@ -5,6 +5,8 @@
 
 library creator;
 
+export 'helpers/helpers.exports.dart';
+export 'providers/providers.exports.dart';
 export 'ui/ui.exports.dart';
 
 export 'main.dart';

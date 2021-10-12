@@ -7,6 +7,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  bool _isScanning = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,8 +76,16 @@ class _MainPageState extends State<MainPage> {
                             fontSize: 15, fontWeight: FontWeight.bold),
                       ),
                       elevation: 30),
-                  child: Text('Hubungkan', style: GoogleFonts.poppins()),
-                  onPressed: () {},
+                  child: _isScanning
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : Text('Hubungkan', style: GoogleFonts.poppins()),
+                  onPressed: () async {
+                    final DatasetProvider provider = context.read();
+                    setState(() => _isScanning = true);
+                    await provider.scanBluetoothDevice();
+                    setState(() => _isScanning = false);
+                    await BluetoothList.show(context);
+                  },
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
