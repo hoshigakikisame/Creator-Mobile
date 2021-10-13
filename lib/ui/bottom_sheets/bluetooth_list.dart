@@ -93,7 +93,7 @@ class _BluetoothListState extends State<BluetoothList> {
               ),
               onPressed: () async {
                 final DatasetProvider provider = context.read();
-                if (provider.connectionState == BluetoothConnState.disconnected)
+                if (provider.connectionState != BluetoothConnState.connected)
                   await provider.connectToDevice(item.device);
               },
               // ignore: unrelated_type_equality_checks

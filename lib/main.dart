@@ -302,36 +302,55 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (context) => DatasetProvider(),
-          )
-        ],
-        builder: (context, child) {
-          return MaterialApp(
-            scaffoldMessengerKey: scaffoldMessengerKey,
-            title: 'CREATOR',
-            theme: ThemeData(
-                textTheme:
-                    GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)),
-            routes: {'/': (context) => MainPage()},
-            builder: (context, navigator) {
-              final DatasetProvider provider = context.read();
-              FlutterBlue.instance.state.listen((event) {
-                if (event == BluetoothState.turningOff)
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => DatasetProvider(),
+        )
+      ],
+      builder: (context, child) {
+        return MaterialApp(
+          scaffoldMessengerKey: scaffoldMessengerKey,
+          title: 'CREATOR',
+          theme: ThemeData(
+              textTheme:
+                  GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)),
+          routes: {'/': (context) => MainPage()},
+          builder: (context, navigator) {
+            final DatasetProvider provider = context.read();
+
+            FlutterBlue.instance.state.listen(
+              (event) async {
+                if (event == BluetoothState.turningOff) {
+                  await provider.disconnectCurrentDevice();
+                  provider.connectionState = BluetoothConnState.unknown;
                   scaffoldMessengerKey.currentState!.showSnackBar(
                     snackbar(
                       title: 'INFO',
-                      content: "Bluetooth was disconnected",
+                      content: "Bluetooth was turned off",
                     ),
                   );
-                // if (provider.connectionState == BluetoothConnState.disconnected)
+                }
+              },
+            );
+
+            if (provider.connectedDevice != null)
+              provider.connectedDevice!.state.listen((event) async {
+                if (event == BluetoothDeviceState.disconnected) {
+                  scaffoldMessengerKey.currentState!.showSnackBar(
+                    snackbar(
+                      title: 'INFO',
+                      content: "No device connected",
+                    ),
+                  );
+                  await provider.disconnectCurrentDevice();
+                }
               });
 
-              return navigator!;
-            },
-            debugShowCheckedModeBanner: false,
-          );
-        });
+            return navigator!;
+          },
+          debugShowCheckedModeBanner: false,
+        );
+      },
+    );
   }
 }

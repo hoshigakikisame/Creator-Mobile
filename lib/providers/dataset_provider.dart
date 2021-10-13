@@ -3,14 +3,14 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 
-enum BluetoothConnState { connected, disconnected }
+enum BluetoothConnState { unknown, connected, disconnected }
 
 class DatasetProvider with ChangeNotifier {
   DatasetProvider();
 
   // variables
   FlutterBlue flutterBlue = FlutterBlue.instance;
-  BluetoothConnState _connectionState = BluetoothConnState.disconnected;
+  BluetoothConnState _connectionState = BluetoothConnState.unknown;
   List<double> _dataset = [];
   List<ScanResult> bluetoothDevices = [];
   BluetoothDevice? _connectedDevice;
@@ -18,14 +18,18 @@ class DatasetProvider with ChangeNotifier {
   BluetoothDevice? get connectedDevice => _connectedDevice;
 
   Future<void> disconnectCurrentDevice() async {
-    await _connectedDevice!.disconnect();
+    try {
+      await _connectedDevice!.disconnect();
+    } catch (e) {}
     _connectedDevice = null;
     _connectionState = BluetoothConnState.disconnected;
     notifyListeners();
   }
 
   Future<void> connectToDevice(BluetoothDevice device) async {
-    await device.connect();
+    try {
+      await device.connect();
+    } catch (e) {}
     _connectedDevice = device;
     _connectionState = BluetoothConnState.connected;
     notifyListeners();
