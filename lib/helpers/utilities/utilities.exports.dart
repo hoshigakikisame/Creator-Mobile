@@ -6,4 +6,6 @@
 library utilities;
 
 
+export 'utilities.exports.dart';
 export 'snackbar.dart';
+export 'material_banner.dart';

@@ -23,6 +23,18 @@ class BluetoothList extends StatefulWidget {
 }
 
 class _BluetoothListState extends State<BluetoothList> {
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    final DatasetProvider provider = context.read();
+    setState(() => _isLoading = true);
+    provider
+        .scanBluetoothDevice()
+        .then((e) => setState(() => _isLoading = false));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedPadding(
@@ -69,7 +81,9 @@ class _BluetoothListState extends State<BluetoothList> {
               icon: Icon(Icons.bluetooth_disabled, color: Colors.red),
               onPressed: () async {
                 final DatasetProvider provider = context.read();
+                setState(() => _isLoading = true);
                 await provider.disconnectCurrentDevice();
+                setState(() => _isLoading = false);
               },
             ),
           ),
@@ -78,29 +92,44 @@ class _BluetoothListState extends State<BluetoothList> {
           subtitle: Text("Unconnected"),
         ),
       ]..addAll(
-          provider.bluetoothDevices.map(
-            (item) {
-              return ListTile(
-                title: Text(item.device.name == ''
-                    ? '(unknown device)'
-                    : item.device.name),
-                subtitle: Text(item.device.id.toString()),
-                trailing: IconButton(
-                  icon: Icon(Icons.bluetooth,
-                      color: provider.connectionState ==
-                              BluetoothConnState.connected
-                          ? Colors.grey.shade400
-                          : Colors.blue),
-                  onPressed: () async {
-                    final DatasetProvider provider = context.read();
-                    if (provider.connectionState !=
-                        BluetoothConnState.connected)
-                      await provider.connectToDevice(item.device);
+          _isLoading
+              ? [
+                  SizedBox(height: 75),
+                  Center(
+                      child: SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      color: Colors.brown,
+                    ),
+                  ))
+                ]
+              : provider.bluetoothDevices.map(
+                  (item) {
+                    return ListTile(
+                      title: Text(item.device.name == ''
+                          ? '(unknown device)'
+                          : item.device.name),
+                      subtitle: Text(item.device.id.toString()),
+                      trailing: IconButton(
+                        icon: Icon(Icons.bluetooth,
+                            color: provider.connectionState ==
+                                    BluetoothConnState.connected
+                                ? Colors.grey.shade400
+                                : Colors.blue),
+                        onPressed: () async {
+                          final DatasetProvider provider = context.read();
+                          if (provider.connectionState !=
+                              BluetoothConnState.connected){
+                                setState(() => _isLoading = true);
+                            await provider.connectToDevice(item.device);
+                                setState(() => _isLoading = false);
+                              }
+                        },
+                      ),
+                    );
                   },
-                ),
-              );
-            },
-          ).toList(),
+                ).toList(),
         ),
     );
   }

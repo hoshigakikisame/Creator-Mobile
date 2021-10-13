@@ -78,26 +78,15 @@ class _MainPageState extends State<MainPage> {
                             fontSize: 15, fontWeight: FontWeight.bold),
                       ),
                       elevation: 30),
-                  child: _isScanning
-                      ? SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(
-                          provider.connectionState ==
-                                  BluetoothConnState.connected
-                              ? "Tersambung ke ${provider.connectedDevice!.name}"
-                              : 'Hubungkan',
-                          style: GoogleFonts.poppins()),
+                  child: Text(
+                      provider.connectionState == BluetoothConnState.connected
+                          ? "Tersambung ke ${provider.connectedDevice!.name}"
+                          : 'Hubungkan',
+                      style: GoogleFonts.poppins()),
                   onPressed: () async {
-                    final DatasetProvider provider = context.read();
-                    setState(() => _isScanning = true);
-                    await provider.scanBluetoothDevice();
-                    setState(() => _isScanning = false);
-                    await BluetoothList.show(context);
+                    await FlutterBlue.instance.state.first == BluetoothState.on
+                        ? await BluetoothList.show(context)
+                        : showInfoBanner(content: "Bluetooth tidak aktif");
                   },
                 ),
                 SizedBox(height: 10),

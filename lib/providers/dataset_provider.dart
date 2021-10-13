@@ -6,7 +6,15 @@ import 'package:flutter/cupertino.dart';
 enum BluetoothConnState { unknown, connected, disconnected }
 
 class DatasetProvider with ChangeNotifier {
-  DatasetProvider();
+  DatasetProvider() {
+    loadPreferences();
+  }
+
+  Future<void> loadPreferences() async {
+    final devicesConnected = await flutterBlue.connectedDevices;
+    if (devicesConnected.isNotEmpty) connectToDevice(devicesConnected.first);
+    notifyListeners();
+  }
 
   // variables
   FlutterBlue flutterBlue = FlutterBlue.instance;
@@ -20,6 +28,7 @@ class DatasetProvider with ChangeNotifier {
   Future<void> disconnectCurrentDevice() async {
     try {
       await _connectedDevice!.disconnect();
+      scanBluetoothDevice();
     } catch (e) {}
     _connectedDevice = null;
     _connectionState = BluetoothConnState.disconnected;
@@ -29,6 +38,7 @@ class DatasetProvider with ChangeNotifier {
   Future<void> connectToDevice(BluetoothDevice device) async {
     try {
       await device.connect();
+      scanBluetoothDevice();
     } catch (e) {}
     _connectedDevice = device;
     _connectionState = BluetoothConnState.connected;
@@ -49,7 +59,6 @@ class DatasetProvider with ChangeNotifier {
     await flutterBlue.startScan(timeout: Duration(seconds: 4));
     flutterBlue.scanResults.listen((results) => bluetoothDevices = results);
     flutterBlue.stopScan();
-    print(await FlutterBlue.instance.connectedDevices);
     notifyListeners();
   }
 }

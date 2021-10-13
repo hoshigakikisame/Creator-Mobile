@@ -323,12 +323,7 @@ class MyApp extends StatelessWidget {
                 if (event == BluetoothState.turningOff) {
                   await provider.disconnectCurrentDevice();
                   provider.connectionState = BluetoothConnState.unknown;
-                  scaffoldMessengerKey.currentState!.showSnackBar(
-                    snackbar(
-                      title: 'INFO',
-                      content: "Bluetooth was turned off",
-                    ),
-                  );
+                  showInfoBanner(content: "Bluetooth tidak aktif");
                 }
               },
             );
@@ -336,12 +331,7 @@ class MyApp extends StatelessWidget {
             if (provider.connectedDevice != null)
               provider.connectedDevice!.state.listen((event) async {
                 if (event == BluetoothDeviceState.disconnected) {
-                  scaffoldMessengerKey.currentState!.showSnackBar(
-                    snackbar(
-                      title: 'INFO',
-                      content: "No device connected",
-                    ),
-                  );
+                  showInfoBanner(content: "Tidak ada perangkat tersambung");
                   await provider.disconnectCurrentDevice();
                 }
               });
