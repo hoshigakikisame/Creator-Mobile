@@ -120,11 +120,11 @@ class _BluetoothListState extends State<BluetoothList> {
                         onPressed: () async {
                           final DatasetProvider provider = context.read();
                           if (provider.connectionState !=
-                              BluetoothConnState.connected){
-                                setState(() => _isLoading = true);
+                              BluetoothConnState.connected) {
+                            setState(() => _isLoading = true);
                             await provider.connectToDevice(item.device);
-                                setState(() => _isLoading = false);
-                              }
+                            setState(() => _isLoading = false);
+                          }
                         },
                       ),
                     );

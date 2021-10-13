@@ -330,7 +330,7 @@ class MyApp extends StatelessWidget {
 
             if (provider.connectedDevice != null)
               provider.connectedDevice!.state.listen((event) async {
-                if (event == BluetoothDeviceState.disconnected) {
+                if (event == BluetoothDeviceState.disconnecting) {
                   showInfoBanner(content: "Tidak ada perangkat tersambung");
                   await provider.disconnectCurrentDevice();
                 }

@@ -28,8 +28,8 @@ class DatasetProvider with ChangeNotifier {
   Future<void> disconnectCurrentDevice() async {
     try {
       await _connectedDevice!.disconnect();
-      scanBluetoothDevice();
     } catch (e) {}
+    await scanBluetoothDevice();
     _connectedDevice = null;
     _connectionState = BluetoothConnState.disconnected;
     notifyListeners();
@@ -38,8 +38,8 @@ class DatasetProvider with ChangeNotifier {
   Future<void> connectToDevice(BluetoothDevice device) async {
     try {
       await device.connect();
-      scanBluetoothDevice();
     } catch (e) {}
+    await scanBluetoothDevice();
     _connectedDevice = device;
     _connectionState = BluetoothConnState.connected;
     notifyListeners();
@@ -57,7 +57,8 @@ class DatasetProvider with ChangeNotifier {
   // method
   Future<void> scanBluetoothDevice() async {
     await flutterBlue.startScan(timeout: Duration(seconds: 4));
-    flutterBlue.scanResults.listen((results) => bluetoothDevices = results);
+    flutterBlue.scanResults.listen((results) =>
+        bluetoothDevices = results.where((e) => e.device.name != '').toList());
     flutterBlue.stopScan();
     notifyListeners();
   }
