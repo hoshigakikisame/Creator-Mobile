@@ -1,4 +1,5 @@
 import 'package:creator/creator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BluetoothList extends StatefulWidget {
@@ -55,51 +56,52 @@ class _BluetoothListState extends State<BluetoothList> {
 
   Widget buildList() {
     final DatasetProvider provider = context.watch();
-    return ListView.builder(
-      itemCount: provider.connectedDevice != null
-          ? provider.bluetoothDevices.length + 1
-          : provider.bluetoothDevices.length,
-      itemBuilder: (context, index) {
-        final item = provider.bluetoothDevices[provider.connectedDevice != null
-            ? index <= 0
-                ? index
-                : index - 1
-            : index];
-        if (index == 0 && provider.connectedDevice != null)
-          return ListTile(
+    return ListView(
+      children: [
+        ListTile(
+          subtitle: Text("Connected"),
+        ),
+        if (provider.connectionState == BluetoothConnState.connected)
+          ListTile(
             title: Text(provider.connectedDevice!.name),
             subtitle: Text(provider.connectedDevice!.id.toString()),
-            leading: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
-                ),
-                onPressed: () async {
-                  final DatasetProvider provider = context.read();
-                  await provider.disconnectCurrentDevice();
-                },
-                // ignore: unrelated_type_equality_checks
-                child: Text("Disconnect")),
-          );
-        return ListTile(
-          title: Text(
-              item.device.name == '' ? '(unknown device)' : item.device.name),
-          subtitle: Text(item.device.id.toString()),
-          leading: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary:
-                    provider.connectionState == BluetoothConnState.connected
-                        ? Colors.grey
-                        : Colors.blue,
-              ),
+            trailing: IconButton(
+              icon: Icon(Icons.bluetooth_disabled, color: Colors.red),
               onPressed: () async {
                 final DatasetProvider provider = context.read();
-                if (provider.connectionState != BluetoothConnState.connected)
-                  await provider.connectToDevice(item.device);
+                await provider.disconnectCurrentDevice();
               },
-              // ignore: unrelated_type_equality_checks
-              child: Text("Connect")),
-        );
-      },
+            ),
+          ),
+        Divider(),
+        ListTile(
+          subtitle: Text("Unconnected"),
+        ),
+      ]..addAll(
+          provider.bluetoothDevices.map(
+            (item) {
+              return ListTile(
+                title: Text(item.device.name == ''
+                    ? '(unknown device)'
+                    : item.device.name),
+                subtitle: Text(item.device.id.toString()),
+                trailing: IconButton(
+                  icon: Icon(Icons.bluetooth,
+                      color: provider.connectionState ==
+                              BluetoothConnState.connected
+                          ? Colors.grey.shade400
+                          : Colors.blue),
+                  onPressed: () async {
+                    final DatasetProvider provider = context.read();
+                    if (provider.connectionState !=
+                        BluetoothConnState.connected)
+                      await provider.connectToDevice(item.device);
+                  },
+                ),
+              );
+            },
+          ).toList(),
+        ),
     );
   }
 }

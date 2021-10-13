@@ -8,6 +8,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   bool _isScanning = false;
+  late AnimationController animationController;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget buildBody() {
+    final DatasetProvider provider = context.watch();
     return Container(
       color: Color(0xFFFFCD5E),
       width: MediaQuery.of(context).size.width,
@@ -77,8 +79,19 @@ class _MainPageState extends State<MainPage> {
                       ),
                       elevation: 30),
                   child: _isScanning
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Text('Hubungkan', style: GoogleFonts.poppins()),
+                      ? SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          provider.connectionState ==
+                                  BluetoothConnState.connected
+                              ? "Tersambung ke ${provider.connectedDevice!.name}"
+                              : 'Hubungkan',
+                          style: GoogleFonts.poppins()),
                   onPressed: () async {
                     final DatasetProvider provider = context.read();
                     setState(() => _isScanning = true);
