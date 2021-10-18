@@ -7,8 +7,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  bool _isScanning = false;
   late AnimationController animationController;
+
+  @override
+  initState() {
+    super.initState();
+    final DatasetProvider provider = context.read();
+    if (mounted) provider.loadPreferences();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,27 +73,59 @@ class _MainPageState extends State<MainPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: StadiumBorder(),
-                      primary: Color(0xFF601E06),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 0, vertical: 20),
-                      textStyle: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: StadiumBorder(),
+                            primary: Color(0xFF601E06),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 0, vertical: 20),
+                            textStyle: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            ),
+                            elevation: 30),
+                        child: Text('Hubungkan', style: GoogleFonts.poppins()),
+                        onPressed: () async {
+                          // await FlutterBlue.instance.state.first == BluetoothState.on
+                          await BluetoothList.show(context);
+                          //     : showInfoBanner(content: "Bluetooth tidak aktif");
+                        },
                       ),
-                      elevation: 30),
-                  child: Text(
-                      provider.connectionState == BluetoothConnState.connected
-                          ? "Tersambung ke ${provider.connectedDevice!.name}"
-                          : 'Hubungkan',
-                      style: GoogleFonts.poppins()),
-                  onPressed: () async {
-                    await FlutterBlue.instance.state.first == BluetoothState.on
-                        ? await BluetoothList.show(context)
-                        : showInfoBanner(content: "Bluetooth tidak aktif");
-                  },
+                    ),
+                    Switch(
+                      value: provider.bluetoothState.isEnabled,
+                      onChanged: (bool value) {
+                        future() async {
+                          if (value) {
+                            // Enable Bluetooth
+                            await FlutterBluetoothSerial.instance
+                                .requestEnable();
+                          } else {
+                            // Disable Bluetooth
+                            await FlutterBluetoothSerial.instance
+                                .requestDisable();
+                          }
+
+                          // In order to update the devices list
+                          await provider.getPairedDevices();
+
+                          // Disconnect from any device before
+                          // turning off Bluetooth
+                          if (provider.connected) {
+                            provider.disconnect();
+                          }
+                        }
+
+                        future().then((_) {
+                          setState(() {});
+                        });
+                      },
+                    )
+                  ],
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(

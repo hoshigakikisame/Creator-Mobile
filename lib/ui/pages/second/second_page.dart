@@ -23,7 +23,6 @@ class _SecondPageState extends State<SecondPage> {
       setState(() => isLoading = false);
     });
     final DatasetProvider provider = context.read();
-    provider.connectionState = BluetoothConnState.connected;
   }
 
   Widget buildBody() {
@@ -112,50 +111,50 @@ class _SecondPageState extends State<SecondPage> {
                           IconButton(
                               icon: Icon(Icons.chevron_right),
                               onPressed: () async {
-                                BluetoothCharacteristic?
-                                    bluetoothCharacteristic;
-                                final DatasetProvider provider = context.read();
-                                List<BluetoothService> services = await provider
-                                    .connectedDevice!
-                                    .discoverServices();
-                                services.forEach((service) async {
-                                  for (BluetoothCharacteristic c
-                                      in service.characteristics) {
-                                    bluetoothCharacteristic = c;
-                                    // try {
-                                    //   await bluetoothCharacteristic!
-                                    //       .write(utf8.encode("A\n"));
-                                    //   print(
-                                    //       '<-------------------write---------------------->');
-                                    //   print(service.characteristics.indexOf(c));
-                                    //   print(services.indexOf(service));
-                                    // } catch (e) {}
+                                // BluetoothCharacteristic?
+                                //     bluetoothCharacteristic;
+                                // final DatasetProvider provider = context.read();
+                                // List<BluetoothService> services = await provider
+                                //     .connectedDevice!
+                                //     .discoverServices();
+                                // services.forEach((service) async {
+                                //   for (BluetoothCharacteristic c
+                                //       in service.characteristics) {
+                                //     bluetoothCharacteristic = c;
+                                //     // try {
+                                //     //   await bluetoothCharacteristic!
+                                //     //       .write(utf8.encode("A\n"));
+                                //     //   print(
+                                //     //       '<-------------------write---------------------->');
+                                //     //   print(service.characteristics.indexOf(c));
+                                //     //   print(services.indexOf(service));
+                                //     // } catch (e) {}
 
-                                    // try {
-                                    //   final val =
-                                    //       await bluetoothCharacteristic!.read();
-                                    //   print(
-                                    //       '<-------------------read---------------------->');
-                                    //   print(val);
-                                    //   print(service.characteristics.indexOf(c));
-                                    //   print(services.indexOf(service));
-                                    // } catch (e) {}
+                                //     // try {
+                                //     //   final val =
+                                //     //       await bluetoothCharacteristic!.read();
+                                //     //   print(
+                                //     //       '<-------------------read---------------------->');
+                                //     //   print(val);
+                                //     //   print(service.characteristics.indexOf(c));
+                                //     //   print(services.indexOf(service));
+                                //     // } catch (e) {}
 
-                                    // try {
-                                    //   await c.setNotifyValue(true);
-                                    //   c.value.listen((value) {
-                                    //     print('dasfafdsfsd');
-                                    //     print(value);
-                                    //   });
-                                    // } catch (e) {}
-                                  }
-                                }
-                                    // }
-                                    // for (BluetoothCharacteristic c
-                                    // in service.characteristics) {
-                                    // await c.write([0x12, 0x34]);
-                                    // }
-                                    );
+                                //     // try {
+                                //     //   await c.setNotifyValue(true);
+                                //     //   c.value.listen((value) {
+                                //     //     print('dasfafdsfsd');
+                                //     //     print(value);
+                                //     //   });
+                                //     // } catch (e) {}
+                                //   }
+                                // }
+                                //     // }
+                                //     // for (BluetoothCharacteristic c
+                                //     // in service.characteristics) {
+                                //     // await c.write([0x12, 0x34]);
+                                //     // }
+                                //     );
                               })
                         ],
                       ),

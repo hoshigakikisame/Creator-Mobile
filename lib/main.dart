@@ -316,25 +316,31 @@ class MyApp extends StatelessWidget {
                   GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)),
           routes: {'/': (context) => MainPage()},
           builder: (context, navigator) {
-            final DatasetProvider provider = context.read();
+            final DatasetProvider provider = context.watch();
+            FlutterBluetoothSerial.instance
+                .onStateChanged()
+                .listen((BluetoothState state) {
+              provider.bluetoothState = state;
+              // For retrieving the paired devices list
+            });
 
-            FlutterBlue.instance.state.listen(
-              (event) async {
-                if (event == BluetoothState.turningOff) {
-                  await provider.disconnectCurrentDevice();
-                  provider.connectionState = BluetoothConnState.unknown;
-                  showInfoBanner(content: "Bluetooth tidak aktif");
-                }
-              },
-            );
+            // FlutterBlue.instance.state.listen(
+            //   (event) async {
+            //     if (event == BluetoothState.turningOff) {
+            //       await provider.disconnectCurrentDevice();
+            //       provider.connectionState = BluetoothConnState.unknown;
+            //       showInfoBanner(content: "Bluetooth tidak aktif");
+            //     }
+            //   },
+            // );
 
-            if (provider.connectedDevice != null)
-              provider.connectedDevice!.state.listen((event) async {
-                if (event == BluetoothDeviceState.disconnecting) {
-                  showInfoBanner(content: "Tidak ada perangkat tersambung");
-                  await provider.disconnectCurrentDevice();
-                }
-              });
+            // if (provider.connectedDevice != null)
+            //   provider.connectedDevice!.state.listen((event) async {
+            //     if (event == BluetoothDeviceState.disconnecting) {
+            //       showInfoBanner(content: "Tidak ada perangkat tersambung");
+            //       await provider.disconnectCurrentDevice();
+            //     }
+            //   });
 
             return navigator!;
           },

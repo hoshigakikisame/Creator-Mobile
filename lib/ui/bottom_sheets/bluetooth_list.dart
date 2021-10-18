@@ -23,16 +23,15 @@ class BluetoothList extends StatefulWidget {
 }
 
 class _BluetoothListState extends State<BluetoothList> {
-  bool _isLoading = false;
+  // bool _isLoading = false;
 
   @override
   void initState() {
-    final DatasetProvider provider = context.read();
-    setState(() => _isLoading = true);
-    provider
-        .scanBluetoothDevice()
-        .then((e) => setState(() => _isLoading = false));
     super.initState();
+    final DatasetProvider provider = context.read();
+    try {
+      provider.getPairedDevices();
+    } catch (e) {}
   }
 
   @override
@@ -57,9 +56,22 @@ class _BluetoothListState extends State<BluetoothList> {
             ),
             const SizedBox(height: 8.0),
             Expanded(
-              flex: 2,
-              child: buildList(),
-            ),
+                flex: 2,
+                child: Column(children: [
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Paired Device'),
+                        IconButton(
+                            icon: Icon(CupertinoIcons.gear),
+                            onPressed: () {
+                              FlutterBluetoothSerial.instance.openSettings();
+                            })
+                      ]),
+                  Expanded(
+                    child: buildList(),
+                  )
+                ])),
           ],
         ),
       ),
@@ -68,69 +80,95 @@ class _BluetoothListState extends State<BluetoothList> {
 
   Widget buildList() {
     final DatasetProvider provider = context.watch();
-    return ListView(
-      children: [
-        ListTile(
-          subtitle: Text("Connected"),
-        ),
-        if (provider.connectionState == BluetoothConnState.connected)
-          ListTile(
-            title: Text(provider.connectedDevice!.name),
-            subtitle: Text(provider.connectedDevice!.id.toString()),
-            trailing: IconButton(
-              icon: Icon(Icons.bluetooth_disabled, color: Colors.red),
-              onPressed: () async {
-                final DatasetProvider provider = context.read();
-                setState(() => _isLoading = true);
-                await provider.disconnectCurrentDevice();
-                setState(() => _isLoading = false);
-              },
-            ),
-          ),
-        Divider(),
-        ListTile(
-          subtitle: Text("Unconnected"),
-        ),
-      ]..addAll(
-          _isLoading
-              ? [
-                  SizedBox(height: 75),
-                  Center(
-                      child: SizedBox(
-                    width: 22,
-                    height: 22,
-                    child: CircularProgressIndicator(
-                      color: Colors.brown,
-                    ),
-                  ))
-                ]
-              : provider.bluetoothDevices.map(
-                  (item) {
-                    return ListTile(
-                      title: Text(item.device.name == ''
-                          ? '(unknown device)'
-                          : item.device.name),
-                      subtitle: Text(item.device.id.toString()),
-                      trailing: IconButton(
-                        icon: Icon(Icons.bluetooth,
-                            color: provider.connectionState ==
-                                    BluetoothConnState.connected
-                                ? Colors.grey.shade400
-                                : Colors.blue),
-                        onPressed: () async {
-                          final DatasetProvider provider = context.read();
-                          if (provider.connectionState !=
-                              BluetoothConnState.connected) {
-                            setState(() => _isLoading = true);
-                            await provider.connectToDevice(item.device);
-                            setState(() => _isLoading = false);
-                          }
-                        },
-                      ),
-                    );
-                  },
-                ).toList(),
-        ),
-    );
+    // return Container();
+    return ListView.builder(
+        itemCount: provider.devicesList.length,
+        itemBuilder: (context, index) {
+          final item = provider.devicesList[index];
+          return ListTile(
+            title: Text(item.name! == '' ? '(unknown device)' : item.name!),
+            onTap: () {
+              final DatasetProvider provider = context.read();
+              provider.connected
+                  ? provider.disconnect()
+                  : provider.connect(item);
+            },
+            selected: item == provider.currentDevice,
+            // selectedTileColor: Colors.grey.shade300,
+            // subtitle: Text(item.device.id.toString()),
+            // trailing: IconButton(
+            //     icon: Icon(Icons.bluetooth,
+            //         color: provider.connected
+            //             ? Colors.grey.shade400
+            //             : Colors.blue),
+            //     onPressed: () {
+            //       provider.connected
+            //           ? provider.disconnect()
+            //           : provider.connect(item);
+            //     }),
+          );
+        });
+    //       ListView(
+    //     children: [
+    //       ListTile(
+    //         subtitle: Text("Connected"),
+    //       ),
+    //       if (provider.connectionState == BluetoothConnState.connected)
+    //         ListTile(
+    //           title: Text(provider.connectedDevice!.device.name!),
+    //           // subtitle: Text(provider.connectedDevice!.id.toString()),
+    //           trailing: IconButton(
+    //             icon: Icon(Icons.bluetooth_disabled, color: Colors.red),
+    //             onPressed: () async {
+    //               final DatasetProvider provider = context.read();
+    //               // setState(() => _isLoading = true);
+    //               await provider.disconnectCurrentDevice();
+    //               // setState(() => _isLoading = false);
+    //             },
+    //           ),
+    //         ),
+    //       Divider(),
+    //       ListTile(
+    //         subtitle: Text("Unconnected"),
+    //       ),
+    //     ]..addAll(
+    //         provider.isDiscovering
+    //             ? [
+    //                 SizedBox(height: 75),
+    //                 Center(
+    //                     child: SizedBox(
+    //                   width: 22,
+    //                   height: 22,
+    //                   child: CircularProgressIndicator(
+    //                     color: Colors.brown,
+    //                   ),
+    //                 ))
+    //               ]
+    //             : provider.results.map(
+    //                 (item) {
+    //                   return ListTile(
+    //                     title: Text(item.device.name ?? '(unknown device)'),
+    //                     // subtitle: Text(item.device.id.toString()),
+    //                     trailing: IconButton(
+    //                       icon: Icon(Icons.bluetooth,
+    //                           color: provider.connectionState ==
+    //                                   BluetoothConnState.connected
+    //                               ? Colors.grey.shade400
+    //                               : Colors.blue),
+    //                       onPressed: () async {
+    //                         final DatasetProvider provider = context.read();
+    //                         if (provider.connectionState !=
+    //                             BluetoothConnState.connected) {
+    //                           // setState(() => provider.isDiscovering = true);
+    //                           await provider.connectToDevice(item);
+    //                           // setState(() => provider.isDiscovering = false);
+    //                         }
+    //                       },
+    //                     ),
+    //                   );
+    //                 },
+    //               ).toList(),
+    //       ),
+    //   );
   }
 }
