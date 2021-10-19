@@ -87,63 +87,51 @@ class _MainPageState extends State<MainPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: StadiumBorder(),
-                            primary: Color(0xFF601E06),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 20),
-                            textStyle: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                            elevation: 30),
-                        child: Text('Hubungkan', style: GoogleFonts.poppins()),
-                        onPressed: () async {
-                          // await FlutterBlue.instance.state.first == BluetoothState.on
-                          await BluetoothList.show(context);
-                          //     : showInfoBanner(content: "Bluetooth tidak aktif");
-                        },
-                      ),
-                    ),
-                    CupertinoSwitch(
-                      value: provider.bluetoothState.isEnabled,
-                      onChanged: (bool value) {
-                        future() async {
-                          if (value) {
-                            // Enable Bluetooth
-                            await FlutterBluetoothSerial.instance
-                                .requestEnable();
-                          } else {
-                            // Disable Bluetooth
-                            await FlutterBluetoothSerial.instance
-                                .requestDisable();
-                          }
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Mulai Pengukuran',
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF601E06))),
+                      Switch(
+                          activeColor: Color(0xFF601E06),
+                          value: provider.bluetoothState.isEnabled,
+                          onChanged: (value) {
+                            future() async {
+                              if (value) {
+                                // Enable Bluetooth
+                                await FlutterBluetoothSerial.instance
+                                    .requestEnable();
+                              } else {
+                                // Disable Bluetooth
+                                await FlutterBluetoothSerial.instance
+                                    .requestDisable();
+                              }
 
-                          // In order to update the devices list
-                          await provider.getPairedDevices();
+                              // In order to update the devices list
+                              await provider.getPairedDevices();
 
-                          // Disconnect from any device before
-                          // turning off Bluetooth
-                          if (provider.connected) {
-                            provider.disconnect();
-                          }
-                        }
+                              // Disconnect from any device before
+                              // turning off Bluetooth
+                              if (provider.connected) {
+                                provider.disconnect();
+                              }
+                            }
 
-                        future().then((_) {
-                          setState(() {});
-                        });
-                      },
-                    )
-                  ],
+                            future().then((_) {
+                              setState(() {});
+                            });
+                          })
+                    ],
+                  ),
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
-                  child: Text('Mulai Pengukuran',
+                  child: Text(provider.currentDevice?.name ?? 'Hubungkan',
                       style: TextStyle(color: Color(0xFF601E06))),
                   style: ElevatedButton.styleFrom(
                       shape: StadiumBorder(),
@@ -154,10 +142,29 @@ class _MainPageState extends State<MainPage> {
                           textStyle: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
                       elevation: 30),
-                  onPressed: () {
-                    Navigator.push(context, RouteTo(SecondPage()));
+                  onPressed: () async {
+                    await BluetoothList.show(context);
                   },
-                )
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: StadiumBorder(),
+                      primary: Color(0xFF601E06),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+                      textStyle: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                      elevation: 30),
+                  child: Text('Mulai Pengukuran', style: GoogleFonts.poppins()),
+                  onPressed: () {
+                    // await FlutterBlue.instance.state.first == BluetoothState.on
+                    Navigator.push(context, RouteTo(SecondPage()));
+                    //     : showInfoBanner(content: "Bluetooth tidak aktif");
+                  },
+                ),
               ],
             ),
           )
