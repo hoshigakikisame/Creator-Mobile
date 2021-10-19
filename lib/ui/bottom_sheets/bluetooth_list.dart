@@ -82,93 +82,26 @@ class _BluetoothListState extends State<BluetoothList> {
     final DatasetProvider provider = context.watch();
     // return Container();
     return ListView.builder(
+        physics: BouncingScrollPhysics(),
         itemCount: provider.devicesList.length,
         itemBuilder: (context, index) {
           final item = provider.devicesList[index];
           return ListTile(
-            title: Text(item.name! == '' ? '(unknown device)' : item.name!),
-            onTap: () {
-              final DatasetProvider provider = context.read();
-              provider.connected
-                  ? provider.disconnect()
-                  : provider.connect(item);
-            },
-            selected: item == provider.currentDevice,
-            // selectedTileColor: Colors.grey.shade300,
-            // subtitle: Text(item.device.id.toString()),
-            // trailing: IconButton(
-            //     icon: Icon(Icons.bluetooth,
-            //         color: provider.connected
-            //             ? Colors.grey.shade400
-            //             : Colors.blue),
-            //     onPressed: () {
-            //       provider.connected
-            //           ? provider.disconnect()
-            //           : provider.connect(item);
-            //     }),
-          );
+              title: Text(item.name! == '' ? '(unknown device)' : item.name!),
+              selected: item == provider.currentDevice,
+              trailing: IconButton(
+                icon: Icon(
+                    item == provider.currentDevice
+                        ? Icons.bluetooth_disabled
+                        : Icons.bluetooth,
+                    color: item == provider.currentDevice ? Colors.red : null),
+                onPressed: () {
+                  final DatasetProvider provider = context.read();
+                  provider.connected
+                      ? provider.disconnect()
+                      : provider.connect(item);
+                },
+              ));
         });
-    //       ListView(
-    //     children: [
-    //       ListTile(
-    //         subtitle: Text("Connected"),
-    //       ),
-    //       if (provider.connectionState == BluetoothConnState.connected)
-    //         ListTile(
-    //           title: Text(provider.connectedDevice!.device.name!),
-    //           // subtitle: Text(provider.connectedDevice!.id.toString()),
-    //           trailing: IconButton(
-    //             icon: Icon(Icons.bluetooth_disabled, color: Colors.red),
-    //             onPressed: () async {
-    //               final DatasetProvider provider = context.read();
-    //               // setState(() => _isLoading = true);
-    //               await provider.disconnectCurrentDevice();
-    //               // setState(() => _isLoading = false);
-    //             },
-    //           ),
-    //         ),
-    //       Divider(),
-    //       ListTile(
-    //         subtitle: Text("Unconnected"),
-    //       ),
-    //     ]..addAll(
-    //         provider.isDiscovering
-    //             ? [
-    //                 SizedBox(height: 75),
-    //                 Center(
-    //                     child: SizedBox(
-    //                   width: 22,
-    //                   height: 22,
-    //                   child: CircularProgressIndicator(
-    //                     color: Colors.brown,
-    //                   ),
-    //                 ))
-    //               ]
-    //             : provider.results.map(
-    //                 (item) {
-    //                   return ListTile(
-    //                     title: Text(item.device.name ?? '(unknown device)'),
-    //                     // subtitle: Text(item.device.id.toString()),
-    //                     trailing: IconButton(
-    //                       icon: Icon(Icons.bluetooth,
-    //                           color: provider.connectionState ==
-    //                                   BluetoothConnState.connected
-    //                               ? Colors.grey.shade400
-    //                               : Colors.blue),
-    //                       onPressed: () async {
-    //                         final DatasetProvider provider = context.read();
-    //                         if (provider.connectionState !=
-    //                             BluetoothConnState.connected) {
-    //                           // setState(() => provider.isDiscovering = true);
-    //                           await provider.connectToDevice(item);
-    //                           // setState(() => provider.isDiscovering = false);
-    //                         }
-    //                       },
-    //                     ),
-    //                   );
-    //                 },
-    //               ).toList(),
-    //       ),
-    //   );
   }
 }

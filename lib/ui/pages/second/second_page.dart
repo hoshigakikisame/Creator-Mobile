@@ -111,6 +111,8 @@ class _SecondPageState extends State<SecondPage> {
                           IconButton(
                               icon: Icon(Icons.chevron_right),
                               onPressed: () async {
+                                final DatasetProvider provider = context.read();
+                                provider.sendOnMessageToBluetooth();
                                 // BluetoothCharacteristic?
                                 //     bluetoothCharacteristic;
                                 // final DatasetProvider provider = context.read();

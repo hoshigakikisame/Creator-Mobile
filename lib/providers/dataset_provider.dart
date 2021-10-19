@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:creator/creator.dart';
 import 'dart:async';
 
@@ -24,6 +27,12 @@ class DatasetProvider with ChangeNotifier {
     });
 
     // notifyListeners();
+  }
+
+  void startListeningInput() {
+    connection?.input?.listen((Uint8List data) {
+      print(data);
+    });
   }
 
   Future<void> enableBluetooth() async {
@@ -84,7 +93,7 @@ class DatasetProvider with ChangeNotifier {
   bool _connected = false;
 
   set connected(newBool) {
-    connected = newBool;
+    _connected = newBool;
     notifyListeners();
   }
 
@@ -95,11 +104,19 @@ class DatasetProvider with ChangeNotifier {
     await connection!.close();
 
     // Update the [_connected] variable
-    if (!connection!.isConnected) {
-      connected = false;
-      currentDevice = null;
-    }
+    if (!connection!.isConnected) {}
+    connected = false;
+    currentDevice = null;
     notifyListeners();
+  }
+
+  sendOnMessageToBluetooth() async {
+    connection?.output.add(utf8.encode("1" + "\r\n") as Uint8List);
+    await connection?.output.allSent;
+    // show('Device Turned On');
+    // setState(() {
+    // _deviceState = 1; // device on
+    // });
   }
 
   BluetoothDevice? currentDevice;
@@ -108,34 +125,40 @@ class DatasetProvider with ChangeNotifier {
     if (!isConnected) {
       // Trying to connect to the device using
       // its address
-      await BluetoothConnection.toAddress(device.address).then((_connection) {
-        print('Connected to the device');
-        connection = _connection;
-        currentDevice = device;
-        // Updating the device connectivity
-        // status to [true]
+      try {
+        await BluetoothConnection.toAddress(device.address).then((_connection) {
+          print('Connected to the device');
+          connection = _connection;
+          currentDevice = device;
+          // Updating the device connectivity
+          // status to [true]
 
-        _connected = true;
+          _connected = true;
 
-        // This is for tracking when the disconnecting process
-        // is in progress which uses the [isDisconnecting] variable
-        // defined before.
-        // Whenever we make a disconnection call, this [onDone]
-        // method is fired.
-        connection!.input!.listen(null).onDone(() {
-          if (isDisconnecting) {
-            currentDevice = null;
-            print('Disconnecting locally!');
-          } else {
-            currentDevice = null;
-            print('Disconnected remotely!');
-          }
-          notifyListeners();
+          // This is for tracking when the disconnecting process
+          // is in progress which uses the [isDisconnecting] variable
+          // defined before.
+          // Whenever we make a disconnection call, this [onDone]
+          // method is fired.
+          connection!.input!.listen(null).onDone(() {
+            if (isDisconnecting) {
+              currentDevice = null;
+              _connected = false;
+              print('Disconnecting locally!');
+            } else {
+              currentDevice = null;
+              _connected = false;
+              print('Disconnected remotely!');
+            }
+            notifyListeners();
+          });
         });
-      }).catchError((error) {
-        print('Cannot connect, exception occurred');
-        // print(error);
-      });
+      } catch (e) {}
+      // .catchError((error) {
+      //   print('Cannot connect, exception occurred');
+      //   // print(error);
+      // });
     }
+    notifyListeners();
   }
 }

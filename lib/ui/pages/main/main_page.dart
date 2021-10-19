@@ -1,4 +1,5 @@
 import 'package:creator/creator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -8,6 +9,19 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   late AnimationController animationController;
+
+  @override
+  void dispose() {
+    final DatasetProvider provider = context.read();
+    // Avoid memory leak and disconnect
+    if (provider.isConnected) {
+      provider.isDisconnecting = true;
+      provider.connection?.dispose();
+      provider.connection = null;
+    }
+
+    super.dispose();
+  }
 
   @override
   initState() {
@@ -96,7 +110,7 @@ class _MainPageState extends State<MainPage> {
                         },
                       ),
                     ),
-                    Switch(
+                    CupertinoSwitch(
                       value: provider.bluetoothState.isEnabled,
                       onChanged: (bool value) {
                         future() async {
